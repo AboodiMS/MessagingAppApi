@@ -5,6 +5,7 @@ using MessagingAppApi.Shared.Security;
 using MessagingAppApi.Shared.Swagger;
 using MessagingAppApi.Hubs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -5,6 +5,7 @@ using MessagingAppApi.Filters;
 using MessagingAppApi.Model;
 using MessagingAppApi.Shared.Controllers;
 using MessagingAppApi.Shared.Dtos;
+using MessagingAppApi.Shared.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ namespace MessagingAppApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [AuthorizationAction]
     public class UsersController : BaseController
     {
         public UsersController(MessagingAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)

@@ -10,11 +10,13 @@ using MessagingAppApi.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using MessagingAppApi.Shared.Security;
 
 namespace MessagingAppApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AuthorizationAction]
     public class MessagesController : BaseController
     {
         private readonly IHubContext<MessageHub> MessageHubContext;
@@ -91,7 +93,7 @@ namespace MessagingAppApi.Controllers
         //    if (entity == null)
         //        throw new BaseException("NotFound");
         //    if(entity.CreatedBy != UserId)
-        //        throw new UnauthorizedAccessException("CanNotAccessThisMessage");
+        //        throw new UnauthorizedException();
         //    return entity;
         //}
     }

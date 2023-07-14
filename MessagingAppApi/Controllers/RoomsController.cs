@@ -7,6 +7,7 @@ using MessagingAppApi.Model;
 using MessagingAppApi.Model.Entities;
 using MessagingAppApi.Shared.Controllers;
 using MessagingAppApi.Shared.Exceptions;
+using MessagingAppApi.Shared.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ namespace MessagingAppApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [AuthorizationAction]
     public class RoomsController : BaseController
     {
         public RoomsController(MessagingAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)

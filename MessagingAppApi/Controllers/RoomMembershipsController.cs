@@ -7,6 +7,7 @@ using MessagingAppApi.Model;
 using MessagingAppApi.Model.Entities;
 using MessagingAppApi.Shared.Controllers;
 using MessagingAppApi.Shared.Exceptions;
+using MessagingAppApi.Shared.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ namespace MessagingAppApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [AuthorizationAction]
     public class RoomMembershipsController : BaseController
     {
         public RoomMembershipsController(MessagingAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
@@ -50,7 +51,7 @@ namespace MessagingAppApi.Controllers
             var entity = await DbContext.RoomMemberships
                 .Where(a=>a.RoomId == roomId && a.UserId==UserId && a.Deleted==false).FirstOrDefaultAsync();
             if (entity == null)
-                throw new UnauthorizedAccessException("YouNotMemberInRoom");
+                throw new BaseException("YouNotMemberInRoom");
         }
 
         [HttpPost]

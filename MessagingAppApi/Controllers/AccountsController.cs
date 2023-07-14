@@ -23,7 +23,7 @@ namespace MessagingAppApi.Controllers
 
         [HttpGet]
         [Route("Get")]
-        [Authorize]
+        [AuthorizationAction]
         public async Task<GetAccountDto> Get()
         {
             var entity = await DbContext.Users.Where(a=>a.Id==UserId && a.Deleted == false).FirstOrDefaultAsync();

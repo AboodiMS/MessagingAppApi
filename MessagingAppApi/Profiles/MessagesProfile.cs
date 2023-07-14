@@ -10,8 +10,10 @@ namespace MessagingAppApi.Profiles
         public MessagesProfile()
         {
             CreateMap<GetMessageDto, Message>().ReverseMap();
-            CreateMap<Message, CreateMessageDto>().ReverseMap();
-            CreateMap<Message, UpdateMessageDto>().ReverseMap();
+            CreateMap<Message, CreateMessageDto>()
+                .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text.Trim())).ReverseMap();
+            CreateMap<Message, UpdateMessageDto>()
+                .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text.Trim())).ReverseMap();
         }
     }
 }
