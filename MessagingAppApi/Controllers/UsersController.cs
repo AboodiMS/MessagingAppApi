@@ -27,27 +27,6 @@ namespace MessagingAppApi.Controllers
         }
 
         [HttpGet]
-        [Route("Get")]
-        public async Task<List<GetUserDto>> Get([FromQuery] UsersFilter filters)
-        {
-            var list = await DbContext.Users
-                            .Where(a => filters.FromCreatedDate == null || a.CreatedAt >= filters.FromCreatedDate)
-                            .Where(a => filters.ToCreatedDate == null || a.CreatedAt <= filters.ToCreatedDate)
-                            .Where(a => a.Deleted == false)
-                           
-                            .Where(a => string.IsNullOrEmpty(filters.Username) || a.Username.Contains(filters.Username))
-                            .Where(a=>a.Id != UserId)
-                            .OrderBy(a => a.CreatedAt)
-                            .Skip(filters?.Skip ?? 0)
-                            .Take(filters?.Take ?? 10)  
-                                                       
-                            .ToListAsync();
-
-            var listDto = Mapper.Map<List<GetUserDto>>(list);
-            return listDto;
-        }
-
-        [HttpGet]
         [Route("SearchUsersForInvetation")]
         public async Task<List<GetUserDto>> SearchUsersForInvetation([FromQuery] [Required] Guid roomId)
         {

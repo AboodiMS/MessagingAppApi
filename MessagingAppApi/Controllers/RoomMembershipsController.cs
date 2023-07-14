@@ -77,7 +77,6 @@ namespace MessagingAppApi.Controllers
 
         }
 
-
         [HttpPost]
         [Route("Accepte")]
         public async Task Accepte(Guid id)
@@ -107,7 +106,6 @@ namespace MessagingAppApi.Controllers
             entity.SetDeleteInfo(UserId);
             await DbContext.SaveChangesAsync();
         }
-
 
         [HttpGet]
         [Route("GetUsersInvitations")]

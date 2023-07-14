@@ -47,6 +47,7 @@ namespace MessagingAppApi.Controllers
             var listDto = Mapper.Map<List<GetRoomDto>>(list);
             return listDto;
         }
+
         [HttpGet]
         public async Task<GetRoomDto> Get(Guid id)
         {
@@ -83,12 +84,14 @@ namespace MessagingAppApi.Controllers
             await DbContext.SaveChangesAsync();
             return entity.Id;
         }
+
         private async Task CheckName(string name, Guid id)
         {
             bool NameNotAvailable = await DbContext.Rooms.AnyAsync(a => a.Name == name && a.Id != id);
             if (NameNotAvailable)
                 throw new BaseException("NameNotAvailable");
         }
+
         [HttpPost]
         [Route("Update")]
         public async Task Update([FromBody] UpdateRoomDto dto)

@@ -75,26 +75,5 @@ namespace MessagingAppApi.Controllers
                 throw new BaseException("YouAreNotMemberInThisRoom");
         }
 
-        //[HttpPost]
-        //[Route("Update")]
-        //public async Task Update([FromBody] UpdateMessageDto dto)
-        //{
-        //    var entity = await Get(dto.Id);
-        //    await CheckRoomMembership(entity.RoomId);
-        //    Mapper.Map(dto,entity);
-        //    entity.SetUpdateInfo(UserId);
-        //    await DbContext.Messages.AddAsync(entity);
-        //    await DbContext.SaveChangesAsync();
-        //}
-
-        //private async Task<Message> Get(Guid id)
-        //{
-        //    var entity = await DbContext.Messages.Where(a => a.Id == id && a.Deleted == false).FirstOrDefaultAsync();
-        //    if (entity == null)
-        //        throw new BaseException("NotFound");
-        //    if(entity.CreatedBy != UserId)
-        //        throw new UnauthorizedException();
-        //    return entity;
-        //}
     }
 }
