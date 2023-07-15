@@ -13,10 +13,6 @@ namespace MessagingAppApi.Shared.Controllers
         {
             get { return GetUserId(); }
         }
-        public string Username
-        {
-            get { return GetUsername(); }
-        }
         public BaseController(MessagingAppDbContext dbContext, IMapper mapper)
         {
             DbContext = dbContext;
@@ -33,19 +29,6 @@ namespace MessagingAppApi.Shared.Controllers
             catch
             {
                 return Guid.Empty;
-            }
-
-        }
-        protected string GetUsername()
-        {
-            try
-            {
-                string Username = HttpContext.User.Claims.Where(x => x.Type == "Username").FirstOrDefault().Value;
-                return Username;
-            }
-            catch
-            {
-                return string.Empty;
             }
 
         }

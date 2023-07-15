@@ -5,7 +5,6 @@ using MessagingAppApi.Shared.Security;
 using MessagingAppApi.Shared.Swagger;
 using MessagingAppApi.Hubs;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +26,7 @@ builder.Services.AddCors(options =>
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<MessagingAppDbContext>(x => x.UseSqlServer(connectionString));
 
 
@@ -60,8 +60,6 @@ app.UseEndpoints(endpoints =>
     });
     endpoints.MapHub<MessageHub>("/messagehub");
 });
-
-
 
 using (var scope = app.Services.CreateScope())
 {

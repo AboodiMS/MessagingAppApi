@@ -30,12 +30,24 @@ namespace MessagingAppApi.Shared.Security
                 {
                     ValidIssuer = Configuration["Jwt:Issuer"],
                     ValidAudience = Configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey
-                        (Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = false,
                     ValidateIssuerSigningKey = true
+                };
+                o.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/messagehub"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
             return Services;
@@ -47,12 +59,12 @@ namespace MessagingAppApi.Shared.Security
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                new Claim("Id", Guid.NewGuid().ToString()),
-                new Claim("Username", Username),
-                new Claim("UserId", UserId),
-                new Claim(JwtRegisteredClaimNames.Jti,
-                Guid.NewGuid().ToString())
-             }),
+                    new Claim("Id", Guid.NewGuid().ToString()),
+                    new Claim("Username", Username),
+                    new Claim("UserId", UserId),
+                    new Claim(JwtRegisteredClaimNames.Jti,
+                    Guid.NewGuid().ToString())
+                 }),
                 Expires = DateTime.UtcNow.AddMinutes(5),
                 Issuer = Issuer,
                 Audience = Audience,

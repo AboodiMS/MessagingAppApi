@@ -29,6 +29,7 @@ namespace MessagingAppApi.Controllers
         [Route("Get")]
         public async Task<List<GetMessageDto>> Get([FromQuery] MessagesFilter filters) 
         {
+            await CheckRoomMembership(filters.RoomId);
             var list = await DbContext.Messages
                 .Where(a => filters.FromCreatedDate == null || a.CreatedAt >= filters.FromCreatedDate)
                 .Where(a => filters.ToCreatedDate == null || a.CreatedAt <= filters.ToCreatedDate)
@@ -56,20 +57,19 @@ namespace MessagingAppApi.Controllers
             entity.SetCreateInfo(UserId);
             await DbContext.Messages.AddAsync(entity);
             await DbContext.SaveChangesAsync();
-            //await MessageHubContext.Clients.Group(dto.RoomId.ToString()).SendAsync("ReceiveMessage", dto);
-            await MessageHubContext.Clients.All.SendAsync("ReceiveMessage", new GetMessageDto()
+            await MessageHubContext.Clients.Group(entity.RoomId.ToString()).SendAsync("ReceiveMessage", new GetMessageDto()
             {
-                Id=entity.Id,
-                CreatedAt=entity.CreatedAt,
-                CreatedBy=entity.CreatedBy,
-                Text=entity.Text,   
-                RoomId= entity.RoomId,
+                Id = entity.Id,
+                CreatedAt = entity.CreatedAt,
+                CreatedBy = entity.CreatedBy,
+                Text = entity.Text,
+                RoomId = entity.RoomId,
             });
         }
         private async Task CheckRoomMembership(Guid roomId)
         {
             var entity = await DbContext.RoomMemberships
-                                        .Where(a=>a.RoomId == roomId && a.UserId == UserId && a.Deleted == false)
+                                        .Where(a=>a.RoomId == roomId && a.UserId == UserId && a.Deleted == false && a.Accepted)
                                         .FirstOrDefaultAsync();
             if (entity == null)
                 throw new BaseException("YouAreNotMemberInThisRoom");
