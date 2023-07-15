@@ -41,6 +41,7 @@ namespace MessagingAppApi.Controllers
                             .Skip(filters?.Skip ?? 0)
                             .Take(filters?.Take ?? 10)                           
                             .Include(a=>a.User)
+                            .AsNoTracking()
                             .ToListAsync();
             var listDto = Mapper.Map<List<GetRoomMembershipDto>>(list);
             return listDto;
@@ -49,7 +50,7 @@ namespace MessagingAppApi.Controllers
         private async Task CheckUserMembership(Guid roomId)
         {
             var entity = await DbContext.RoomMemberships
-                .Where(a=>a.RoomId == roomId && a.UserId==UserId && a.Deleted==false).FirstOrDefaultAsync();
+                .Where(a=>a.RoomId == roomId && a.UserId==UserId && a.Deleted==false).AsNoTracking().FirstOrDefaultAsync();
             if (entity == null)
                 throw new BaseException("YouNotMemberInRoom");
         }
@@ -69,7 +70,7 @@ namespace MessagingAppApi.Controllers
         {
             var entity = await DbContext.RoomMemberships.Where(a => a.UserId == dto.UserId 
                                                                  && a.RoomId == dto.RoomId 
-                                                                 && a.Deleted == false).FirstOrDefaultAsync();
+                                                                 && a.Deleted == false).AsNoTracking().FirstOrDefaultAsync();
             if (entity != null && entity.Accepted)
                 throw new BaseException("thisUserAlreadyInRoom");
             if (entity != null && entity.Accepted == false)
@@ -81,7 +82,9 @@ namespace MessagingAppApi.Controllers
         [Route("Accepte")]
         public async Task Accepte(Guid id)
         {
-            var entity = await DbContext.RoomMemberships.Where(a => a.Id == id && a.Deleted == false && a.UserId == UserId).FirstOrDefaultAsync();
+            var entity = await DbContext.RoomMemberships
+                .Where(a => a.Id == id && a.Deleted == false && a.UserId == UserId)
+                .AsNoTracking().FirstOrDefaultAsync();
             if (entity == null)
                 throw new BaseException("NotFound");
             if (entity.Accepted)
@@ -98,7 +101,8 @@ namespace MessagingAppApi.Controllers
             var entity = await DbContext.RoomMemberships.Where(a => a.Id == id 
                                                                  && a.Deleted == false 
                                                                  && a.Accepted == false
-                                                                 && a.UserId == UserId)                                           
+                                                                 && a.UserId == UserId)
+                                                                 .AsNoTracking()
                                                                  .FirstOrDefaultAsync();
             if (entity == null)
                 throw new BaseException("NotFound");
@@ -116,6 +120,7 @@ namespace MessagingAppApi.Controllers
                                 .Where(a => a.Accepted == false)
                                 .Where(a => a.UserId == UserId)
                                 .Include(a=>a.Room)
+                                .AsNoTracking()
                                 .ToListAsync();
             var listDto = Mapper.Map<List<GetUserInvitationsDto>>(list);
             return listDto;

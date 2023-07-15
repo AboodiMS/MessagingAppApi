@@ -26,7 +26,8 @@ namespace MessagingAppApi.Controllers
         [AuthorizationAction]
         public async Task<GetAccountDto> Get()
         {
-            var entity = await DbContext.Users.Where(a=>a.Id==UserId && a.Deleted == false).FirstOrDefaultAsync();
+            var entity = await DbContext.Users.Where(a=>a.Id==UserId && a.Deleted == false)
+                  .AsNoTracking().FirstOrDefaultAsync();
             var dto = Mapper.Map<GetAccountDto>(entity);
             return dto;
         }
@@ -35,7 +36,8 @@ namespace MessagingAppApi.Controllers
         [Route("Login")]
         public async Task<string> Login([FromBody] LoginAccountDto dto)
         {
-            var entity = await DbContext.Users.Where(a => a.Username == dto.Username && a.Deleted == false).FirstOrDefaultAsync();
+            var entity = await DbContext.Users.Where(a => a.Username == dto.Username && a.Deleted == false)
+                .AsNoTracking().FirstOrDefaultAsync();
             if (entity == null || entity.Password != dto.Password.HashPassword())
                 throw new BaseException("ErrorUsernameOrPassword");
             return JwtExtension.CreateToken(entity.Id.ToString(), entity.Username);

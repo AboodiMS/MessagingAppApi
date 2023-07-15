@@ -35,6 +35,7 @@ namespace MessagingAppApi.Controllers
                             .Include(a=>a.RoomMemberships)
                             .Where(a=>a.RoomMemberships.Count(a=>a.RoomId == roomId && a.Deleted ==false)==0)
                             .OrderBy(a => a.CreatedAt)
+                            .AsNoTracking()
                             .ToListAsync();
             var listDto = Mapper.Map<List<GetUserDto>>(list);
             return listDto;

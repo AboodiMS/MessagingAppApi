@@ -41,6 +41,7 @@ namespace MessagingAppApi.Controllers
                 .Skip(filters?.Skip ?? 0)
                 .Take(filters?.Take ?? 10)
                 .OrderBy(a => a.CreatedAt)
+                .AsNoTracking()
                 .ToListAsync();
 
             var listDto = Mapper.Map<List<GetMessageDto>>(list);
@@ -70,6 +71,7 @@ namespace MessagingAppApi.Controllers
         {
             var entity = await DbContext.RoomMemberships
                                         .Where(a=>a.RoomId == roomId && a.UserId == UserId && a.Deleted == false && a.Accepted)
+                                        .AsNoTracking()
                                         .FirstOrDefaultAsync();
             if (entity == null)
                 throw new BaseException("YouAreNotMemberInThisRoom");

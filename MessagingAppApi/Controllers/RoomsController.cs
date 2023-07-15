@@ -42,6 +42,7 @@ namespace MessagingAppApi.Controllers
                 .Skip(filters?.Skip ?? 0)
                 .Take(filters?.Take ?? 10)
                 .OrderBy(a => a.CreatedAt)
+                .AsNoTracking()
                 .ToListAsync();
 
             var listDto = Mapper.Map<List<GetRoomDto>>(list);
@@ -56,6 +57,7 @@ namespace MessagingAppApi.Controllers
                 .Where(a => a.Deleted == false && a.Id==id)
 
                 .Where(a => a.RoomMemberships.Any(a => a.UserId == UserId && a.Deleted == false))
+                .AsNoTracking()
                 .FirstOrDefaultAsync();
             if (entity == null)
                 throw new BaseException("NotFoundRoom");
@@ -87,7 +89,7 @@ namespace MessagingAppApi.Controllers
 
         private async Task CheckName(string name, Guid id)
         {
-            bool NameNotAvailable = await DbContext.Rooms.AnyAsync(a => a.Name == name && a.Id != id);
+            bool NameNotAvailable = await DbContext.Rooms.AsNoTracking().AnyAsync(a => a.Name == name && a.Id != id);
             if (NameNotAvailable)
                 throw new BaseException("NameNotAvailable");
         }
